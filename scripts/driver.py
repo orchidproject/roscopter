@@ -182,13 +182,18 @@ def command_cb(req):
 
     if req.command == roscopter.srv._APMCommand.APMCommandRequest.CMD_LAUNCH:
         rospy.loginfo ("Launch Command")
-        if (not launch()):
+#        if (not launch()):
 #            # Assume that if launch fails, we may still be in the air and should land
 #            master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, LAND)
 #            rospy.sleep(0.1)
 #            master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, LAND)
-
-            return False
+#
+#            return False
+	master.mav.command_long_send(master.target_system,
+        0, #all components
+        mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
+        1, #confirmation
+        0, 0, 0, 0, 0, 0, 0)
 
         return True
     elif req.command == roscopter.srv._APMCommand.APMCommandRequest.CMD_LAND:
@@ -199,13 +204,17 @@ def command_cb(req):
             rospy.loginfo("Mode already set to LAND")
             return True
         
-        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, LAND)
-        rospy.sleep(0.1)
-        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, LAND)
-
+        #master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, LAND)
+        #rospy.sleep(0.1)
+        #master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, LAND)
+        master.mav.command_long_send(master.target_system, 
+		0, #all components
+        mavutil.mavlink.MAV_CMD_NAV_LAND,
+        1, #confirmation
+        0, 0, 0, 0, 0, 0, 0)
+        
         # Loop until mode is set or timeout
         start_time = rospy.Time.from_sec(time.time()).to_nsec()
-
         while (not state_msg.mode == "LAND"):
             if (not (start_time + opts.mode_timeout*1000000) > rospy.Time.from_sec(time.time()).to_nsec()):
                 rospy.loginfo("Timed out while setting LAND")
