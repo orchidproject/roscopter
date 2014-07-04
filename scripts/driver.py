@@ -363,9 +363,9 @@ def command_cb(req):
             rospy.loginfo("Mode already set to AUTO")
             return True
             
-        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, AUTO)
+        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_AUTO_ENABLED, 0)
         rospy.sleep(0.1)
-        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, AUTO)
+        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_AUTO_ENABLED, 0)
 
         # Loop until mode is set or timeout
         start_time = rospy.Time.from_sec(time.time()).to_nsec()
