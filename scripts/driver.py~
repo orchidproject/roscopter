@@ -179,6 +179,7 @@ def command_cb(req):
     if (opts.enable_autonomous_safety_switch):
         if (not autonomous_enable):
             return False
+    rpspy.loginfo("SADASDA")
     if req.command == roscopter.srv._APMCommand.APMCommandRequest.CMD_LAUNCH:
         rospy.loginfo ("Launch Command")
 #        if (not launch()):
@@ -274,8 +275,8 @@ def command_cb(req):
         if (state_msg.mode == "MANUAL"):
             rospy.loginfo("Mode already set to MANUAL")
             return True
-        rospy.loginfo ("SET MODE TO MANUAL")
-        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_MANUAL_INPUT_ENABLED, 0)
+            
+        master.mav.set_mode_send(master.target_system, mavutil.mavlink.MAV_MODE_FLAG_STABILIZE_ENABLED, 0)
 
         # Loop until mode is set or timeout
         start_time = rospy.Time.from_sec(time.time()).to_nsec()
